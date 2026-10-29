@@ -3,242 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Presensi Kelas 2026C - S1 PTI</title>
+    <title>Portal Mahasiswa - Presensi Kelas 2026C</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
-    <!-- Header & Navigation Bar -->
+    <!-- Header Mahasiswa -->
     <header class="bg-indigo-950 text-white shadow-lg border-b border-indigo-900 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center space-x-3">
                     <div class="bg-indigo-600 p-2 rounded-xl text-white shadow-inner">
-                        <i class="fas fa-graduation-cap text-xl"></i>
+                        <i class="fas fa-user-graduate text-xl"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-base sm:text-lg leading-tight">Presensi Mahasiswa</h1>
                         <p class="text-xs text-indigo-300">S1 PTI - Kelas 2026C</p>
                     </div>
                 </div>
-                <!-- Navigation Tabs -->
-                <div class="flex items-center space-x-2 bg-indigo-900/60 p-1 rounded-xl border border-indigo-800">
-                    <button id="navStudentBtn" onclick="switchTab('student')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-2 bg-indigo-600 text-white shadow">
-                        <i class="fas fa-user-graduate"></i>
-                        <span class="hidden sm:inline">Portal Mahasiswa</span>
-                    </button>
-                    <button id="navLecturerBtn" onclick="requestLecturerAccess()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-indigo-200 hover:text-white transition flex items-center gap-2">
-                        <i class="fas fa-user-shield"></i>
-                        <span class="hidden sm:inline">Portal Dosen</span>
-                        <i id="lockIcon" class="fas fa-lock text-[10px] text-amber-400 ml-1"></i>
-                    </button>
-                </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <!-- ==================== PORTAL MAHASISWA ==================== -->
-        <div id="studentView" class="space-y-6">
-            <!-- Selector Mahasiswa -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5">
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                    <i class="fas fa-user text-indigo-600 mr-1"></i> Pilih Nama Mahasiswa
-                </label>
-                <select id="studentSelect" onchange="onStudentChange()" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 font-medium">
-                    <!-- Populated by JS -->
-                </select>
-            </div>
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <!-- Selector Mahasiswa -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                <i class="fas fa-user text-indigo-600 mr-1"></i> Pilih Nama Mahasiswa
+            </label>
+            <select id="studentSelect" onchange="onStudentChange()" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 font-medium">
+                <!-- Populated by JS -->
+            </select>
+        </div>
 
-            <!-- Student Summary Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
-                    <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl"><i class="fas fa-check-circle text-lg"></i></div>
-                    <div>
-                        <p class="text-[11px] text-slate-500 font-medium">Total Hadir</p>
-                        <p id="stHadirCount" class="text-lg font-bold text-slate-800">0</p>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
-                    <div class="p-3 bg-amber-100 text-amber-600 rounded-xl"><i class="fas fa-envelope-open-text text-lg"></i></div>
-                    <div>
-                        <p class="text-[11px] text-slate-500 font-medium">Izin / Sakit</p>
-                        <p id="stIzinCount" class="text-lg font-bold text-slate-800">0</p>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
-                    <div class="p-3 bg-rose-100 text-rose-600 rounded-xl"><i class="fas fa-times-circle text-lg"></i></div>
-                    <div>
-                        <p class="text-[11px] text-slate-500 font-medium">Alpa</p>
-                        <p id="stAlpaCount" class="text-lg font-bold text-slate-800">0</p>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
-                    <div class="p-3 bg-indigo-100 text-indigo-600 rounded-xl"><i class="fas fa-chart-line text-lg"></i></div>
-                    <div>
-                        <p class="text-[11px] text-slate-500 font-medium">Persentase Kehadiran</p>
-                        <p id="stAttendanceRate" class="text-lg font-bold text-indigo-600">0%</p>
-                    </div>
+        <!-- Student Summary Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
+                <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl"><i class="fas fa-check-circle text-lg"></i></div>
+                <div>
+                    <p class="text-[11px] text-slate-500 font-medium">Total Hadir</p>
+                    <p id="stHadirCount" class="text-lg font-bold text-slate-800">0</p>
                 </div>
             </div>
-
-            <!-- Form Absen Mandiri -->
-            <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl shadow-lg p-6 relative overflow-hidden">
-                <div class="relative z-10 space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-base font-bold flex items-center gap-2">
-                            <i class="fas fa-pen-to-square text-indigo-400"></i> Form Absen Mandiri Mahasiswa
-                        </h2>
-                        <span id="stSessionStatusBadge" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-                            Status Sesi
-                        </span>
-                    </div>
-                    <div id="activeSessionBox" class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label class="block text-xs text-indigo-200 font-medium mb-1">Pertemuan Aktif</label>
-                                <input type="text" id="stMeetingInput" readonly value="Belum Ada Sesi" class="w-full bg-white/10 border border-white/20 rounded-xl p-2.5 text-sm font-bold text-white cursor-not-allowed">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-indigo-200 font-medium mb-1">Status Kehadiran</label>
-                                <select id="stStatusSelect" onchange="toggleNoteField()" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-400">
-                                    <option value="Hadir">Hadir</option>
-                                    <option value="Izin">Izin</option>
-                                    <option value="Sakit">Sakit</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-indigo-200 font-medium mb-1">Masukkan PIN Sesi Dosen</label>
-                                <input type="text" id="stPinInput" placeholder="4-6 Digit PIN" maxlength="6" class="w-full bg-white text-slate-900 font-mono tracking-widest text-center font-bold rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-400">
-                            </div>
-                        </div>
-                        <div id="stNoteContainer" class="hidden">
-                            <label class="block text-xs text-indigo-200 font-medium mb-1">Alasan / Catatan (Izin/Sakit)</label>
-                            <input type="text" id="stNoteInput" placeholder="Tuliskan keterangan..." class="w-full bg-white/10 border border-white/20 rounded-xl p-2.5 text-sm text-white focus:outline-none">
-                        </div>
-                        <button id="btnSubmitAttendance" onclick="submitAttendance()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-                            <i class="fas fa-paper-plane"></i> Kirim Presensi Sekarang
-                        </button>
-                    </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
+                <div class="p-3 bg-amber-100 text-amber-600 rounded-xl"><i class="fas fa-envelope-open-text text-lg"></i></div>
+                <div>
+                    <p class="text-[11px] text-slate-500 font-medium">Izin / Sakit</p>
+                    <p id="stIzinCount" class="text-lg font-bold text-slate-800">0</p>
                 </div>
             </div>
-
-            <!-- Matrix Riwayat Kehadiran Mahasiswa (16 Pertemuan) -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-3">
-                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                    <i class="fas fa-history text-indigo-600"></i> Status Kehadiran (Pertemuan 1 - 16)
-                </h3>
-                <div id="stGridHistory" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2.5">
-                    <!-- Populated by JS -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
+                <div class="p-3 bg-rose-100 text-rose-600 rounded-xl"><i class="fas fa-times-circle text-lg"></i></div>
+                <div>
+                    <p class="text-[11px] text-slate-500 font-medium">Alpa</p>
+                    <p id="stAlpaCount" class="text-lg font-bold text-slate-800">0</p>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-3">
+                <div class="p-3 bg-indigo-100 text-indigo-600 rounded-xl"><i class="fas fa-chart-line text-lg"></i></div>
+                <div>
+                    <p class="text-[11px] text-slate-500 font-medium">Persentase Kehadiran</p>
+                    <p id="stAttendanceRate" class="text-lg font-bold text-indigo-600">0%</p>
                 </div>
             </div>
         </div>
 
-        <!-- ==================== PORTAL DOSEN / ADMIN ==================== -->
-        <div id="lecturerView" class="space-y-6 hidden">
-            <!-- Control Box Sesi -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                    <div>
-                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fas fa-broadcast-tower text-indigo-600"></i> Kontrol Sesi Absen Mandiri
-                        </h2>
-                        <p class="text-xs text-slate-500">Atur PIN dan buka sesi untuk pertemuan 1 hingga 16.</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition shadow-sm">
-                            <i class="fas fa-file-excel"></i> Ekspor Excel
-                        </button>
-                        <button onclick="resetDataPrompt()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition shadow-sm">
-                            <i class="fas fa-undo"></i> Reset Data
-                        </button>
-                    </div>
+        <!-- Form Absen Mandiri -->
+        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl shadow-lg p-6 relative overflow-hidden">
+            <div class="relative z-10 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base font-bold flex items-center gap-2">
+                        <i class="fas fa-pen-to-square text-indigo-400"></i> Form Absen Mandiri Mahasiswa
+                    </h2>
+                    <span id="stSessionStatusBadge" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                        Memuat Status...
+                    </span>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih Pertemuan (1 - 16)</label>
-                        <select id="adminMeetingSelect" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 bg-white">
-                            <!-- Populated by JS -->
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Atur PIN Sesi</label>
-                        <input type="text" id="adminPinInput" value="1234" maxlength="6" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm font-mono text-center tracking-widest font-bold bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Status Sesi Saat Ini</label>
-                        <div id="adminSessionStatusBadge" class="p-2.5 rounded-xl text-center text-xs font-bold bg-slate-200 text-slate-600 border">
-                            TUTUP
+                <div id="activeSessionBox" class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs text-indigo-200 font-medium mb-1">Pertemuan Aktif</label>
+                            <input type="text" id="stMeetingInput" readonly value="Belum Ada Sesi" class="w-full bg-white/10 border border-white/20 rounded-xl p-2.5 text-sm font-bold text-white cursor-not-allowed">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-indigo-200 font-medium mb-1">Status Kehadiran</label>
+                            <select id="stStatusSelect" onchange="toggleNoteField()" class="w-full bg-slate-800 border border-slate-700 text-white rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-400">
+                                <option value="Hadir">Hadir</option>
+                                <option value="Izin">Izin</option>
+                                <option value="Sakit">Sakit</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-indigo-200 font-medium mb-1">Masukkan PIN Sesi Dosen</label>
+                            <input type="text" id="stPinInput" placeholder="4-6 Digit PIN" maxlength="6" class="w-full bg-white text-slate-900 font-mono tracking-widest text-center font-bold rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-400">
                         </div>
                     </div>
-                    <div>
-                        <button id="toggleSessionBtn" onclick="toggleSession()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-xl shadow transition text-sm">
-                            Buka Sesi Absen
-                        </button>
+                    <div id="stNoteContainer" class="hidden">
+                        <label class="block text-xs text-indigo-200 font-medium mb-1">Alasan / Catatan (Izin/Sakit)</label>
+                        <input type="text" id="stNoteInput" placeholder="Tuliskan keterangan..." class="w-full bg-white/10 border border-white/20 rounded-xl p-2.5 text-sm text-white focus:outline-none">
                     </div>
+                    <button id="btnSubmitAttendance" onclick="submitAttendance()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i> Kirim Presensi Sekarang
+                    </button>
                 </div>
             </div>
+        </div>
 
-            <!-- Tabel Rekapitulasi Matriks Presensi Dosen -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden space-y-0">
-                <div class="p-4 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-3">
-                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                        <i class="fas fa-table text-indigo-600"></i> Matriks Rekapitulasi Presensi Kelas 2026C (45 Mahasiswa)
-                    </h3>
-                    <div class="w-full md:w-64">
-                        <input type="text" id="adminSearchInput" oninput="renderAdminTable()" placeholder="Cari Nama atau NIM..." class="w-full border border-slate-300 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                </div>
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-xs text-left">
-                        <thead class="bg-slate-900 text-slate-200 uppercase font-semibold">
-                            <tr>
-                                <th class="p-2 border-b border-slate-800 text-center">No</th>
-                                <th class="p-2 border-b border-slate-800">NIM</th>
-                                <th class="p-2 border-b border-slate-800 min-w-[200px]">Nama Mahasiswa</th>
-                                <script>
-                                    for(let i=1; i<=16; i++) {
-                                        document.write(`<th class="p-1 border-b border-slate-800 text-center min-w-[36px] ${i<=7?'bg-slate-800 text-emerald-400':''}">${i}</th>`);
-                                    }
-                                </script>
-                                <th class="p-2 border-b border-slate-800 text-center">% Hadir</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminTableBody" class="divide-y divide-slate-200">
-                            <!-- Populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
+        <!-- Matrix Riwayat Kehadiran Mahasiswa -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-3">
+            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                <i class="fas fa-history text-indigo-600"></i> Status Kehadiran (Pertemuan 1 - 16)
+            </h3>
+            <div id="stGridHistory" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2.5">
+                <!-- Populated by JS -->
             </div>
         </div>
     </main>
-
-    <!-- Modal Kunci Sandi Dosen -->
-    <div id="passwordModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-sm w-full p-6 space-y-4">
-            <div class="text-center space-y-2">
-                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-xl">
-                    <i class="fas fa-lock"></i>
-                </div>
-                <h3 class="font-bold text-slate-800 text-base">Portal Dosen Dikunci</h3>
-                <p class="text-xs text-slate-500">Masukkan kata sandi administrator untuk melanjutkan ke menu dosen.</p>
-            </div>
-            <div>
-                <input type="password" id="lecturerPasswordInput" placeholder="Kata Sandi..." class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center font-mono">
-            </div>
-            <div class="flex gap-2">
-                <button onclick="closePasswordModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">Batal</button>
-                <button onclick="verifyLecturerPassword()" class="w-1/2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">Masuk</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal Notifikasi Custom -->
     <div id="customModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -254,7 +138,6 @@
         </div>
     </div>
 
-    <!-- JavaScript Application Code -->
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4JPR-g84f4RYn7xWcsd8F7Bq6pUihDs6V8zhZ3OF9Im5Al01OZl_18gZFoj4eZn7DJw/exec';
         
@@ -308,26 +191,15 @@
 
         let attendanceData = {};
         let activeSession = { meeting: 1, isOpen: false, pin: "1234" }; 
-        let isLecturerUnlocked = false;
 
         window.onload = function() {
             initData();
             initStudentSelect();
-            initAdminMeetingOptions();
             onStudentChange();
             updateSessionUI();
             
-            // Cek status sesi dari Google Sheets secara otomatis tiap 5 detik
+            // Cek status sesi otomatis dari Google Sheets setiap 5 detik
             setInterval(fetchSessionFromSheets, 5000);
-            
-            window.addEventListener('storage', function(e) {
-                if(e.key === 'pti_2026c_attendance' || e.key === 'pti_2026c_session') {
-                    initData();
-                    onStudentChange();
-                    renderAdminTable();
-                    updateSessionUI();
-                }
-            });
         };
 
         function initData() {
@@ -367,63 +239,6 @@
                 opt.textContent = `${i + 1}. ${s.nama} (${s.nim})`;
                 select.appendChild(opt);
             });
-        }
-
-        function initAdminMeetingOptions() {
-            const select = document.getElementById('adminMeetingSelect');
-            select.innerHTML = '';
-            for(let i=1; i<=16; i++) {
-                const opt = document.createElement('option');
-                opt.value = i;
-                opt.textContent = `Pertemuan ${i}`;
-                if(i === activeSession.meeting) opt.selected = true;
-                select.appendChild(opt);
-            }
-        }
-
-        function switchTab(tab) {
-            const studentView = document.getElementById('studentView');
-            const lecturerView = document.getElementById('lecturerView');
-            const navStudentBtn = document.getElementById('navStudentBtn');
-            const navLecturerBtn = document.getElementById('navLecturerBtn');
-            if (tab === 'student') {
-                studentView.classList.remove('hidden');
-                lecturerView.classList.add('hidden');
-                navStudentBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-2 bg-indigo-600 text-white shadow";
-                navLecturerBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-indigo-200 hover:text-white transition flex items-center gap-2";
-            } else if (tab === 'lecturer') {
-                studentView.classList.add('hidden');
-                lecturerView.classList.remove('hidden');
-                navLecturerBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-2 bg-indigo-600 text-white shadow";
-                navStudentBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-indigo-200 hover:text-white transition flex items-center gap-2";
-                renderAdminTable();
-            }
-        }
-
-        function requestLecturerAccess() {
-            if (isLecturerUnlocked) {
-                switchTab('lecturer');
-            } else {
-                document.getElementById('passwordModal').classList.remove('hidden');
-            }
-        }
-
-        function closePasswordModal() {
-            document.getElementById('passwordModal').classList.add('hidden');
-            document.getElementById('lecturerPasswordInput').value = '';
-        }
-
-        function verifyLecturerPassword() {
-            const pwd = document.getElementById('lecturerPasswordInput').value;
-            if (pwd === 'admin123') {
-                isLecturerUnlocked = true;
-                closePasswordModal();
-                document.getElementById('lockIcon').className = "fas fa-lock-open text-[10px] text-emerald-400 ml-1";
-                switchTab('lecturer');
-                showModal("Sukses", "Akses Portal Dosen/Admin Berhasil Dibuka!", "success");
-            } else {
-                showModal("Akses Ditolak", "Kata sandi yang dimasukkan salah.", "danger");
-            }
         }
 
         function onStudentChange() {
@@ -485,7 +300,7 @@
 
             const btn = document.getElementById('btnSubmitAttendance');
             const originalBtnHtml = btn.innerHTML;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengirim ke Google Sheets...`;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Mengirim...`;
             btn.disabled = true;
 
             const dataPresensi = {
@@ -523,143 +338,18 @@
             showModal("Presensi Berhasil", `Presensi Pertemuan ${activeSession.meeting} berstatus (${status}) berhasil disimpan!`, "success");
         }
 
-        function toggleSession() {
-            const meeting = parseInt(document.getElementById('adminMeetingSelect').value);
-            const pin = document.getElementById('adminPinInput').value.trim() || "1234";
-            
-            if (activeSession.isOpen && activeSession.meeting === meeting) {
-                activeSession.isOpen = false;
-            } else {
-                activeSession.meeting = meeting;
-                activeSession.pin = pin;
-                activeSession.isOpen = true;
-            }
-
-            updateSessionUI();
-
-            // Kirim status sesi baru ke Google Sheets
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'updateSession',
-                    isOpen: activeSession.isOpen,
-                    meeting: activeSession.meeting,
-                    pin: activeSession.pin
-                })
-            });
-        }
-
         function updateSessionUI() {
-            const badge = document.getElementById('adminSessionStatusBadge');
-            const btn = document.getElementById('toggleSessionBtn');
             const stBadge = document.getElementById('stSessionStatusBadge');
             const stMeetingInput = document.getElementById('stMeetingInput');
             if(activeSession.isOpen) {
                 stMeetingInput.value = `Pertemuan ${activeSession.meeting}`;
-                badge.className = "p-2.5 rounded-xl text-center text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-300";
-                badge.textContent = `BUKA (P${activeSession.meeting} - PIN: ${activeSession.pin})`;
-                btn.className = "w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-4 rounded-xl shadow transition text-sm";
-                btn.textContent = "Tutup Sesi Absen";
                 stBadge.className = "text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
                 stBadge.textContent = `Sesi P${activeSession.meeting} DIBUKA`;
             } else {
                 stMeetingInput.value = `Belum Ada Sesi (Tutup)`;
-                badge.className = "p-2.5 rounded-xl text-center text-xs font-bold bg-slate-200 text-slate-600 border border-slate-300";
-                badge.textContent = "TUTUP";
-                btn.className = "w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-xl shadow transition text-sm";
-                btn.textContent = "Buka Sesi Absen";
                 stBadge.className = "text-[11px] font-bold px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30";
                 stBadge.textContent = "Sesi DITUTUP";
             }
-        }
-
-        function changeStatusByAdmin(nim, meeting, newStatus) {
-            if(!attendanceData[nim]) attendanceData[nim] = {};
-            if(newStatus) {
-                attendanceData[nim][meeting] = { status: newStatus, timestamp: 'Diubah Dosen', note: '' };
-            } else {
-                delete attendanceData[nim][meeting];
-            }
-            localStorage.setItem('pti_2026c_attendance', JSON.stringify(attendanceData));
-            renderAdminTable();
-            onStudentChange();
-        }
-
-        function renderAdminTable() {
-            const tbody = document.getElementById('adminTableBody');
-            const search = document.getElementById('adminSearchInput').value.toLowerCase();
-            tbody.innerHTML = '';
-            STUDENTS.forEach((s, idx) => {
-                if (search && !s.nama.toLowerCase().includes(search) && !s.nim.includes(search)) return;
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
-                let hadirCount = 0;
-                let cellsHtml = '';
-                for(let m=1; m<=16; m++) {
-                    const rec = attendanceData[s.nim] && attendanceData[s.nim][m];
-                    const status = rec ? rec.status : '-';
-                    if(status === 'Hadir') hadirCount++;
-                    let badgeColor = "text-slate-400";
-                    if(status === 'Hadir') badgeColor = "font-bold text-emerald-600";
-                    if(status === 'Izin') badgeColor = "font-bold text-amber-600";
-                    if(status === 'Sakit') badgeColor = "font-bold text-blue-600";
-                    if(status === 'Alpa') badgeColor = "font-bold text-rose-600";
-                    cellsHtml += `
-                        <td class="p-1 text-center border-r border-slate-100">
-                            <select onchange="changeStatusByAdmin('${s.nim}', ${m}, this.value)" class="text-[10px] p-1 rounded border border-slate-200 ${badgeColor} bg-transparent cursor-pointer font-semibold">
-                                <option value="" ${status==='-'?'selected':''}>-</option>
-                                <option value="Hadir" ${status==='Hadir'?'selected':''}>H</option>
-                                <option value="Izin" ${status==='Izin'?'selected':''}>I</option>
-                                <option value="Sakit" ${status==='Sakit'?'selected':''}>S</option>
-                                <option value="Alpa" ${status==='Alpa'?'selected':''}>A</option>
-                            </select>
-                        </td>
-                    `;
-                }
-                const pct = Math.round((hadirCount / 16) * 100);
-                tr.innerHTML = `
-                    <td class="p-2 text-center text-slate-400 font-medium">${idx + 1}</td>
-                    <td class="p-2 font-mono text-slate-600 font-medium">${s.nim}</td>
-                    <td class="p-2 font-bold text-slate-800">${s.nama}</td>
-                    ${cellsHtml}
-                    <td class="p-2 text-center font-extrabold ${pct>=80?'text-emerald-600':pct>=70?'text-amber-600':'text-rose-600'}">${pct}%</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function exportCSV() {
-            let csv = "No,NIM,Nama Mahasiswa," + Array.from({length:16}, (_,i) => `P${i+1}`).join(",") + ",Persentase Hadir\n";
-            STUDENTS.forEach((s, idx) => {
-                let hadir = 0;
-                let row = [idx + 1, `"${s.nim}"`, `"${s.nama}"`];
-                for(let m=1; m<=16; m++) {
-                    const st = (attendanceData[s.nim] && attendanceData[s.nim][m]) ? attendanceData[s.nim][m].status : '-';
-                    if(st === 'Hadir') hadir++;
-                    row.push(st);
-                }
-                row.push(`${Math.round((hadir/16)*100)}%`);
-                csv += row.join(",") + "\n";
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.setAttribute("download", `Rekap_Presensi_Kelas_2026C.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function resetDataPrompt() {
-            localStorage.removeItem('pti_2026c_attendance');
-            localStorage.removeItem('pti_2026c_session');
-            initData();
-            onStudentChange();
-            renderAdminTable();
-            updateSessionUI();
-            showModal("Reset Data", "Data berhasil di-reset. Pertemuan 1-7 diisi HADIR secara default.", "info");
         }
 
         function showModal(title, message, type='info') {
